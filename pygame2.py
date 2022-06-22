@@ -17,8 +17,7 @@ PLATFORM_COLOR = "#FF6262"
         
 def main():
     hero = player.Player(55,55) # создаем героя по (x,y) координатам
-    left = right = False    # по умолчанию — стоим
-    up = False
+    left = right = up = False    # по умолчанию — стоим
     entities = pygame.sprite.Group() # Все объекты
     platforms = [] # то, во что мы будем врезаться или опираться
     entities.add(hero)
@@ -80,16 +79,16 @@ def main():
         x=y=0 # координаты
         for row in level: # вся строка
             for col in row: # каждый символ
-                if col == "-":
-                    pf = Platform(x,y)
-                    entities.add(pf)
-                    platforms.append(pf)
-
                 # if col == "-":
-                #     #создаем блок, заливаем его цветом и рисеум его
-                #     pf = Surface((PLATFORM_WIDTH,PLATFORM_HEIGHT))
-                #     pf.fill(Color(PLATFORM_COLOR)) 
-                #     screen.blit(pf,(x,y))
+                #     pf = Platform(x,y)
+                #     entities.add(pf)
+                #     platforms.append(pf)
+
+                if col == "-":
+                    #создаем блок, заливаем его цветом и рисеум его
+                    pf = Surface((PLATFORM_WIDTH,PLATFORM_HEIGHT))
+                    pf.fill(Color(PLATFORM_COLOR)) 
+                    screen.blit(pf,(x,y))
                 
                             
                 x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
@@ -100,11 +99,6 @@ def main():
         entities.draw(screen) # отображение всего
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
-        
-
-
-
-
 
 if __name__ == "__main__":
     main()

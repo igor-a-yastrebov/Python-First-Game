@@ -21,7 +21,7 @@ class Player(sprite.Sprite):
         self.yvel = 0 # скорость вертикального перемещения
         self.onGround = False # На земле ли я?
 
-    def update(self,  left, right, up, platforms):
+    def update(self,  left, right, up):
         if up:
             if self.onGround: # прыгаем, только когда можем оттолкнуться от земли
                 self.yvel = -JUMP_POWER
@@ -35,15 +35,13 @@ class Player(sprite.Sprite):
         if not(left or right): # стоим, когда нет указаний идти
             self.xvel = 0
 
-        if not self.onGround:
-            self.yvel +=  GRAVITY
+        # if not self.onGround:
+        #     self.yvel +=  GRAVITY
 
-        self.onGround = False; # Мы не знаем, когда мы на земле((   
-        self.rect.y += self.yvel
-
+        # self.onGround = False; # Мы не знаем, когда мы на земле((   
+        # self.rect.y += self.yvel
 
         self.rect.x += self.xvel # переносим свои положение на xvel 
-
    
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
