@@ -8,7 +8,6 @@ JUMP_POWER = 10
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 
 
-
 class Player(sprite.Sprite):
     def __init__(self, x, y):
         sprite.Sprite.__init__(self)
@@ -35,11 +34,11 @@ class Player(sprite.Sprite):
         if not(left or right): # стоим, когда нет указаний идти
             self.xvel = 0
 
-        # if not self.onGround:
-        #     self.yvel +=  GRAVITY
+        if not self.onGround:
+            self.yvel +=  GRAVITY
 
-        # self.onGround = False; # Мы не знаем, когда мы на земле((   
-        # self.rect.y += self.yvel
+        self.onGround = False; # Мы не знаем, когда мы на земле((   
+        self.rect.y += self.yvel
 
         self.rect.x += self.xvel # переносим свои положение на xvel 
    

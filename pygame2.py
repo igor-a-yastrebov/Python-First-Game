@@ -58,9 +58,9 @@ def main():
         for e in pygame.event.get(): # Обрабатываем события
             if e.type == KEYDOWN and e.key == K_UP:
                 up = True
-
             if e.type == KEYUP and e.key == K_UP:
                 up = False
+
             if e.type == KEYDOWN and e.key == K_LEFT:
                 left = True
             if e.type == KEYDOWN and e.key == K_RIGHT:
@@ -79,18 +79,12 @@ def main():
         x=y=0 # координаты
         for row in level: # вся строка
             for col in row: # каждый символ
-                # if col == "-":
-                #     pf = Platform(x,y)
-                #     entities.add(pf)
-                #     platforms.append(pf)
-
                 if col == "-":
                     #создаем блок, заливаем его цветом и рисеум его
                     pf = Surface((PLATFORM_WIDTH,PLATFORM_HEIGHT))
                     pf.fill(Color(PLATFORM_COLOR)) 
                     screen.blit(pf,(x,y))
                 
-                            
                 x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
             y += PLATFORM_HEIGHT    #то же самое и с высотой
             x = 0                   #на каждой новой строчке начинаем с нуля       
