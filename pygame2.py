@@ -2,8 +2,8 @@
 from pickle import FALSE
 import pygame
 from pygame import *
-import player
-
+from player import *
+from blocks import *
 
 #Объявляем переменные
 WIN_WIDTH = 800 #Ширина создаваемого окна
@@ -16,7 +16,7 @@ PLATFORM_COLOR = "#FF6262"
 
         
 def main():
-    hero = player.Player(55,55) # создаем героя по (x,y) координатам
+    hero = Player(55,55) # создаем героя по (x,y) координатам
     left = right = up = False    # по умолчанию — стоим
     entities = pygame.sprite.Group() # Все объекты
     platforms = [] # то, во что мы будем врезаться или опираться
@@ -51,6 +51,18 @@ def main():
                                          # будем использовать как фон
     bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
 
+    x=y=0 # координаты
+    for row in level: # вся строка
+        for col in row: # каждый символ
+            if col == "-":
+                pf = Platform(x,y)
+                entities.add(pf)
+                platforms.append(pf)
+            
+            x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
+        y += PLATFORM_HEIGHT    #то же самое и с высотой
+        x = 0                   #на каждой новой строчке начинаем с нуля       
+
     run = True
     while(run): # Основной цикл программы
         timer.tick(60)
@@ -75,21 +87,8 @@ def main():
                 pygame.display.flip()
                 run = False
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
-        
-        x=y=0 # координаты
-        for row in level: # вся строка
-            for col in row: # каждый символ
-                if col == "-":
-                    #создаем блок, заливаем его цветом и рисеум его
-                    pf = Surface((PLATFORM_WIDTH,PLATFORM_HEIGHT))
-                    pf.fill(Color(PLATFORM_COLOR)) 
-                    screen.blit(pf,(x,y))
-                
-                x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
-            y += PLATFORM_HEIGHT    #то же самое и с высотой
-            x = 0                   #на каждой новой строчке начинаем с нуля       
 
-        hero.update(left, right, up)   # передвижение
+        hero.update(left, right, up, platforms)   # передвижение
         entities.draw(screen) # отображение всего
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
