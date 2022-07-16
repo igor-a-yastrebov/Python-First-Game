@@ -19,8 +19,8 @@ def camera_configure(camera, target_rect):
     return Rect(l, t, w, h)
 
 #Объявляем переменные
-WIN_WIDTH = 800 #Ширина создаваемого окна
-WIN_HEIGHT = 640 # Высота
+WIN_WIDTH = 1000 #Ширина создаваемого окна
+WIN_HEIGHT = 700 # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT) # Группируем ширину и высоту в одну переменную
 BACKGROUND_COLOR = "#004400"
 PLATFORM_WIDTH = 32
@@ -35,7 +35,7 @@ def main():
     platforms = [] # то, во что мы будем врезаться или опираться
     entities.add(hero)
     # единственный телепорт на карте
-    tp = BlockTeleport(128,512,800,64)
+    tp = BlockTeleport(128,512,800,32)
     entities.add(tp)
     platforms.append(tp)
     animatedEntities.add(tp)
@@ -126,7 +126,7 @@ def main():
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
 
         hero.update(left, right, up, running, platforms)   # передвижение
-        
+
         camera.update(hero) # центризируем камеру относительно персонажа
         # entities.draw(screen) # отображение всего
         for e in entities:
