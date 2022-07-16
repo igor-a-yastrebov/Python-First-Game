@@ -5,11 +5,16 @@ import pyganim
 PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
 PLATFORM_COLOR = "#FF6262"
+BKGRND_COLOR = "#004400"
 ICON_DIR = os.path.dirname(__file__) #  Полный путь к каталогу с файлами
 
 ANIMATION_BLOCKTELEPORT = [
             ('%s/blocks/portal2.png' % ICON_DIR),
             ('%s/blocks/portal1.png' % ICON_DIR)]
+
+ANIMATION_PRINCESS = [
+            ('%s/blocks/princess_l.png' % ICON_DIR),
+            ('%s/blocks/princess_r.png' % ICON_DIR)]
 
 class Platform(sprite.Sprite):
     def __init__(self, x, y):
@@ -35,6 +40,18 @@ class BlockTeleport(Platform):
         self.boltAnim.play()
 
     def update(self):
-        self.image.fill(Color(PLATFORM_COLOR))
+        self.image.fill(Color(BKGRND_COLOR))
         self.boltAnim.blit(self.image, (0, 0))
 
+class Princess(Platform):
+    def __init__(self, x, y):
+        Platform.__init__(self, x,y)
+        boltAnim = []
+        for anim in ANIMATION_PRINCESS:
+            boltAnim.append((anim, 800))
+        self.boltAnim = pyganim.PygAnimation(boltAnim)
+        self.boltAnim.play()
+
+    def update(self):
+        self.image.fill(Color(BKGRND_COLOR))
+        self.boltAnim.blit(self.image, (0, 0))

@@ -2,6 +2,7 @@
 from pickle import FALSE
 import pygame
 from pygame import *
+from monsters import *
 from player import *
 from blocks import *
 from camera import *
@@ -31,8 +32,15 @@ def main():
     hero = Player(55,55) # создаем героя по (x,y) координатам
     left = right = up = False    # по умолчанию — стоим
     entities = pygame.sprite.Group() # Все объекты
-    animatedEntities = pygame.sprite.Group() # все анимированные объекты, за исключением героя
+    animatedEntities = pygame.sprite.Group() # все анимированные объекты, за исключением героя и монстров
     platforms = [] # то, во что мы будем врезаться или опираться
+
+    monsters = pygame.sprite.Group() # Все передвигающиеся монстры
+    mn = Monster(190,200,2,3,150,105)
+    entities.add(mn)
+    platforms.append(mn)
+    monsters.add(mn)
+
     entities.add(hero)
     # единственный телепорт на карте
     tp = BlockTeleport(128,512,800,32)
@@ -47,7 +55,7 @@ def main():
         "-                                -",
         "-            --                  -",
         "--                               -",
-        "-                                -",
+        "-                             P  -",
         "-                   ----     --- -",
         "-                                -",
         "--                               -",
@@ -84,6 +92,11 @@ def main():
                 bd = BlockDie(x,y)
                 entities.add(bd)
                 platforms.append(bd)
+            if col == "P":
+                pr = Princess(x,y)
+                entities.add(pr)
+                platforms.append(pr)
+                animatedEntities.add(pr)
 
             x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT    #то же самое и с высотой
@@ -133,6 +146,8 @@ def main():
            screen.blit(e.image, camera.apply(e))
 
         animatedEntities.update() # показываем анимацию
+        monsters.update(platforms) # передвигаем всех монстров
+
         pygame.display.update()     # обновление и вывод всех изменений на экран
 
 if __name__ == "__main__":
