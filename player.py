@@ -124,8 +124,6 @@ class Player(sprite.Sprite):
             self.yvel +=  GRAVITY
 
         self.onGround = False; # Мы не знаем, когда мы на земле((   
-        # self.rect.y += self.yvel
-        # self.rect.x += self.xvel # переносим свои положение на xvel 
         self.rect.y += self.yvel
         self.collide(0, self.yvel, platforms)
 
@@ -136,11 +134,6 @@ class Player(sprite.Sprite):
         for p in platforms:
             if sprite.collide_rect(self, p): # если есть пересечение платформы с игроком
 
-                if isinstance(p, blocks.BlockDie): # если пересакаемый блок - blocks.BlockDie
-                    self.die() # умираем
-                elif isinstance(p, blocks.BlockTeleport): # портал
-                    self.teleporting(p.goX, p.goY)
-                    
                 if xvel > 0:                      # если движется вправо
                     self.rect.right = p.rect.left # то не движется вправо
 
@@ -156,8 +149,13 @@ class Player(sprite.Sprite):
                     self.rect.top = p.rect.bottom # то не движется вверх
                     self.yvel = 0                 # и энергия прыжка пропадает
 
+                if isinstance(p, blocks.BlockDie): # если пересакаемый блок - blocks.BlockDie
+                    self.die() # умираем
+                elif isinstance(p, blocks.BlockTeleport): # портал
+                    self.teleporting(p.goX, p.goY)
+                    
     def die(self):
-            time.wait(500)
+            time.wait(1000)
             self.teleporting(self.startX, self.startY) # перемещаемся в начальные координаты
 
     def teleporting(self, goX, goY):
