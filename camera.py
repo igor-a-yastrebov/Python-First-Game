@@ -1,12 +1,14 @@
 from pygame import *
+from player import Player
 
+# TODO: когда сделаем уровни, заинъектить сюда текущий уровень через какой-нибудь менеджер
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
         self.state = Rect(0, 0, width, height)
-	
+
     def apply(self, target):
         return target.rect.move(self.state.topleft)
 
-    def update(self, target):
-        self.state = self.camera_func(self.state, target.rect)
+    def update(self, hero): # центризируем камеру относительно персонажа
+        self.state = self.camera_func(self.state, hero.rect)

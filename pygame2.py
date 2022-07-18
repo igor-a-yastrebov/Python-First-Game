@@ -1,7 +1,7 @@
-# Импортируем библиотеку pygame
 from pickle import FALSE
 import pygame
 from pygame import *
+from eventhandler import EventHandler
 from monsters import *
 from player import *
 from blocks import *
@@ -28,21 +28,22 @@ PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
 PLATFORM_COLOR = "#FF6262"
 
-def main():
-    hero = Player(55,55) # создаем героя по (x,y) координатам
-    left = right = up = False    # по умолчанию — стоим
+def main() -> None:
     entities = pygame.sprite.Group() # Все объекты
     animatedEntities = pygame.sprite.Group() # все анимированные объекты, за исключением героя и монстров
+    monsters = pygame.sprite.Group() # Все передвигающиеся монстры
     platforms = [] # то, во что мы будем врезаться или опираться
 
-    monsters = pygame.sprite.Group() # Все передвигающиеся монстры
+    hero = Player(55,55)
+    entities.add(hero)
+
+    # единственный монстр
     mn = Monster(190,200,2,3,150,105)
     entities.add(mn)
     platforms.append(mn)
     monsters.add(mn)
 
-    entities.add(hero)
-    # единственный телепорт на карте
+    # единственный телепорт
     tp = BlockTeleport(128,512,800,32)
     entities.add(tp)
     platforms.append(tp)
@@ -72,7 +73,6 @@ def main():
         "-           ***                  -",
         "-                                -",
         "----------------------------------"]
-    timer = pygame.time.Clock()
 
     pygame.init() # Инициация PyGame, обязательная строчка 
     screen = pygame.display.set_mode(DISPLAY) # Создаем окошко
@@ -81,6 +81,7 @@ def main():
                                          # будем использовать как фон
     bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
 
+    # парсим уровень, создаем блоки
     x=y=0 # координаты
     for row in level: # вся строка
         for col in row: # каждый символ
@@ -100,52 +101,37 @@ def main():
 
             x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT    #то же самое и с высотой
-        x = 0                   #на каждой новой строчке начинаем с нуля       
+        x = 0                   #на каждой новой строчке начинаем с нуля
 
     total_level_width  = len(level[0])*PLATFORM_WIDTH # Высчитываем фактическую ширину уровня
     total_level_height = len(level)*PLATFORM_HEIGHT   # высоту
 
     camera = Camera(camera_configure, total_level_width, total_level_height)
+    eventHandler = EventHandler(hero)
 
-    working = True
-    running = False
-    while(working): # Основной цикл программы
+    quit = False
+    timer = pygame.time.Clock()
+    while(not quit): # Основной цикл программы
         timer.tick(60)
-
-        for e in pygame.event.get(): # Обрабатываем события
-            if e.type == KEYDOWN and e.key == K_UP:
-                up = True
-            if e.type == KEYUP and e.key == K_UP:
-                up = False
-
-            if e.type == KEYDOWN and e.key == K_LEFT:
-                left = True
-            if e.type == KEYDOWN and e.key == K_RIGHT:
-                right = True
-
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
-            if e.type == KEYUP and e.key == K_LEFT:
-                left = False
-            
-            if e.type == KEYDOWN and e.key == K_LSHIFT:
-                    running = True
-            if e.type == KEYUP and e.key == K_LSHIFT:
-                    running = False
-
-            if e.type == QUIT:
-                pygame.display.flip()
-                working = False
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
+        # pygame.display.update()     # обновление и вывод всех изменений на экран
 
-        hero.update(left, right, up, running, platforms)   # передвижение
+        if eventHandler.handleEvents(platforms) == QUIT:
+            pygame.display.flip()
+            quit = True
+
+        # hero.update(left, right, up, running, platforms)   # передвижение
+        if (hero.winner):
+            quit = True # прошли уровень - выходим
 
         camera.update(hero) # центризируем камеру относительно персонажа
-        # entities.draw(screen) # отображение всего
+        # pygame.display.update()     # обновление и вывод всех изменений на экран
         for e in entities:
-           screen.blit(e.image, camera.apply(e))
+            screen.blit(e.image, camera.apply(e))
+            # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         animatedEntities.update() # показываем анимацию
+        # pygame.display.update()     # обновление и вывод всех изменений на экран
         monsters.update(platforms) # передвигаем всех монстров
 
         pygame.display.update()     # обновление и вывод всех изменений на экран

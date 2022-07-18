@@ -30,7 +30,7 @@ JUMP_EXTRA_POWER = 1 # дополнительная сила прыжка
 ANIMATION_SUPER_SPEED_DELAY = 50 # скорость смены кадров при ускорении
 
 class Player(sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x=55, y=55): # TODO: инициализацию вынести на создание уровня
         sprite.Sprite.__init__(self)
         self.xvel = 0   #скорость перемещения. 0 - стоять на месте
         self.startX = x # Начальная позиция Х, пригодится когда будем переигрывать уровень
@@ -89,7 +89,7 @@ class Player(sprite.Sprite):
                         self.yvel -= JUMP_EXTRA_POWER # то прыгаем выше
                 self.image.fill(Color(COLOR))
                 self.boltAnimJump.blit(self.image, (0, 0))
-                            
+
         if left:
             self.xvel = -MOVE_SPEED # Лево = x- n
             self.image.fill(Color(COLOR))
