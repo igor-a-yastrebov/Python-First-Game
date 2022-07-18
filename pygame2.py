@@ -18,7 +18,6 @@ PLATFORM_COLOR = "#FF6262"
 
 def main() -> None:
     entities = pygame.sprite.Group() # Все объекты
-    animatedEntities = pygame.sprite.Group() # все анимированные объекты, за исключением героя и монстров
     monsters = pygame.sprite.Group() # Все передвигающиеся монстры
     platforms = [] # то, во что мы будем врезаться или опираться
 
@@ -35,7 +34,6 @@ def main() -> None:
     tp = BlockTeleport(128,512,800,32)
     entities.add(tp)
     platforms.append(tp)
-    animatedEntities.add(tp)
     level = [
         "----------------------------------",
         "-                                -",
@@ -77,7 +75,6 @@ def main() -> None:
                 pr = Princess(x,y)
                 entities.add(pr)
                 platforms.append(pr)
-                animatedEntities.add(pr)
 
             x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT    #то же самое и с высотой
@@ -101,7 +98,6 @@ def main() -> None:
     while(not quit): # Основной цикл программы
         timer.tick(60)
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
-        # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         if eventHandler.handleEvents(platforms) == QUIT:
             pygame.display.flip()
@@ -112,14 +108,10 @@ def main() -> None:
 
         monsters.update(platforms) # передвигаем всех монстров
         hero.update(platforms)   # передвижение персонажа
-        animatedEntities.update() # показываем анимацию
-        # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         camera.centerCamera(hero.rect) # центрируем камеру относительно персонажа
-        # pygame.display.update()     # обновление и вывод всех изменений на экран
         for e in entities:
-            screen.blit(e.image, camera.transformSprite(e))
-            # pygame.display.update()     # обновление и вывод всех изменений на экран
+            e.draw(screen, camera)
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
 

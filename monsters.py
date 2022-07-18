@@ -5,6 +5,8 @@ from pygame import *
 import pyganim
 import os
 
+from blocks import BlockStatic
+
 MONSTER_WIDTH = 32
 MONSTER_HEIGHT = 32
 MONSTER_COLOR = "#2110FF"
@@ -13,9 +15,9 @@ ICON_DIR = os.path.dirname(__file__) #  Полный путь к каталог�
 ANIMATION_MONSTERHORYSONTAL = [('%s/monsters/fire1.png' % ICON_DIR),
                       ('%s/monsters/fire2.png' % ICON_DIR )]
 
-class Monster(sprite.Sprite):
+class Monster(BlockStatic):
     def __init__(self, x, y, left, up, maxLengthLeft,maxLengthUp):
-        sprite.Sprite.__init__(self)
+        BlockStatic.__init__(self, x, y)
         self.image = Surface((MONSTER_WIDTH, MONSTER_HEIGHT))
         self.image.fill(Color(MONSTER_COLOR))
         self.rect = Rect(x, y, MONSTER_WIDTH, MONSTER_HEIGHT)

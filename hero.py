@@ -29,9 +29,9 @@ MOVE_EXTRA_SPEED = 2.5 # Ускорение
 JUMP_EXTRA_POWER = 1 # дополнительная сила прыжка
 ANIMATION_SUPER_SPEED_DELAY = 50 # скорость смены кадров при ускорении
 
-class Hero(sprite.Sprite):
+class Hero(blocks.BlockStatic):
     def __init__(self, x=55, y=55): # TODO: инициализацию вынести на создание уровня
-        sprite.Sprite.__init__(self)
+        blocks.BlockStatic.__init__(self, x, y)
         self.xvel = 0   #скорость перемещения. 0 - стоять на месте
         self.startX = x # Начальная позиция Х, пригодится когда будем переигрывать уровень
         self.startY = y
