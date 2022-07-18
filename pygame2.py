@@ -61,14 +61,6 @@ def main() -> None:
         "-           ***                  -",
         "-                                -",
         "----------------------------------"]
-
-    pygame.init() # Инициация PyGame, обязательная строчка 
-    screen = pygame.display.set_mode(DISPLAY) # Создаем окошко
-    pygame.display.set_caption("Super Mario Boy") # Пишем в шапку
-    bg = Surface((WIN_WIDTH,WIN_HEIGHT)) # Создание видимой поверхности
-                                         # будем использовать как фон
-    bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
-
     # парсим уровень, создаем блоки
     x=y=0 # координаты
     for row in level: # вся строка
@@ -94,6 +86,13 @@ def main() -> None:
     total_level_width  = len(level[0])*PLATFORM_WIDTH # Высчитываем фактическую ширину уровня
     total_level_height = len(level)*PLATFORM_HEIGHT   # высоту
 
+    pygame.init() # Инициация PyGame, обязательная строчка 
+    screen = pygame.display.set_mode(DISPLAY) # Создаем окошко
+    pygame.display.set_caption("Super Mario Boy") # Пишем в шапку
+    bg = Surface((WIN_WIDTH,WIN_HEIGHT)) # Создание видимой поверхности
+                                         # будем использовать как фон
+    bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
+
     camera = Camera(total_level_width, total_level_height, WIN_WIDTH, WIN_HEIGHT)
     eventHandler = EventHandler(hero)
 
@@ -108,21 +107,19 @@ def main() -> None:
             pygame.display.flip()
             quit = True
 
-        # hero.update(left, right, up, running, platforms)   # передвижение
         if (hero.winner):
             quit = True # прошли уровень - выходим
 
         monsters.update(platforms) # передвигаем всех монстров
         hero.update(platforms)   # передвижение персонажа
+        animatedEntities.update() # показываем анимацию
+        # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         camera.centerCamera(hero.rect) # центрируем камеру относительно персонажа
         # pygame.display.update()     # обновление и вывод всех изменений на экран
         for e in entities:
             screen.blit(e.image, camera.transformSprite(e))
             # pygame.display.update()     # обновление и вывод всех изменений на экран
-
-        animatedEntities.update() # показываем анимацию
-        # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
 
