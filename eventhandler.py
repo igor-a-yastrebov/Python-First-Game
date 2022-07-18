@@ -9,7 +9,7 @@ class EventHandler(object):
     def __init__(self, hero):
         self.hero = hero
 
-    def handleEvents(self, platforms) -> int:
+    def handleEvents(self) -> int:
         for e in pygame.event.get(): # Обрабатываем события друг за другом
             if self.handleEvent(e) == QUIT:
                 return QUIT

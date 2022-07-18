@@ -11,6 +11,7 @@ JUMP_POWER = 10
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 
 ANIMATION_DELAY = 100 # скорость смены кадров
+ANIMATION_SUPER_SPEED_DELAY = 50 # скорость смены кадров при ускорении
 ANIMATION_RIGHT = [('mario/r1.png'),
             ('mario/r2.png'),
             ('mario/r3.png'),
@@ -27,11 +28,10 @@ ANIMATION_JUMP = [('mario/j.png', 100)]
 ANIMATION_STAY = [('mario/0.png', 100)]
 MOVE_EXTRA_SPEED = 2.5 # Ускорение
 JUMP_EXTRA_POWER = 1 # дополнительная сила прыжка
-ANIMATION_SUPER_SPEED_DELAY = 50 # скорость смены кадров при ускорении
 
 class Hero(blocks.BlockStatic):
     def __init__(self, x=55, y=55): # TODO: инициализацию вынести на создание уровня
-        blocks.BlockStatic.__init__(self, x, y)
+        blocks.BlockStatic.__init__(self, x, y, WIDTH, HEIGHT)
         self.xvel = 0   #скорость перемещения. 0 - стоять на месте
         self.startX = x # Начальная позиция Х, пригодится когда будем переигрывать уровень
         self.startY = y

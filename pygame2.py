@@ -99,7 +99,7 @@ def main() -> None:
         timer.tick(60)
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
 
-        if eventHandler.handleEvents(platforms) == QUIT:
+        if eventHandler.handleEvents() == QUIT:
             pygame.display.flip()
             quit = True
 
