@@ -3,24 +3,12 @@ import pygame
 from pygame import *
 from eventhandler import EventHandler
 from monsters import *
-from player import *
+from hero import *
 from blocks import *
 from camera import *
 
-def camera_configure(camera, target_rect):
-    l, t, _, _ = target_rect
-    _, _, w, h = camera
-    l, t = -l+WIN_WIDTH / 2, -t+WIN_HEIGHT / 2
-
-    l = min(0, l)                           # Не движемся дальше левой границы
-    l = max(-(camera.width-WIN_WIDTH), l)   # Не движемся дальше правой границы
-    t = max(-(camera.height-WIN_HEIGHT), t) # Не движемся дальше нижней границы
-    t = min(0, t)                           # Не движемся дальше верхней границы
-
-    return Rect(l, t, w, h)
-
 #Объявляем переменные
-WIN_WIDTH = 1000 #Ширина создаваемого окна
+WIN_WIDTH = 1000 # Ширина создаваемого окна
 WIN_HEIGHT = 700 # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT) # Группируем ширину и высоту в одну переменную
 BACKGROUND_COLOR = "#004400"
@@ -34,7 +22,7 @@ def main() -> None:
     monsters = pygame.sprite.Group() # Все передвигающиеся монстры
     platforms = [] # то, во что мы будем врезаться или опираться
 
-    hero = Player(55,55)
+    hero = Hero(55,55)
     entities.add(hero)
 
     # единственный монстр
@@ -106,7 +94,7 @@ def main() -> None:
     total_level_width  = len(level[0])*PLATFORM_WIDTH # Высчитываем фактическую ширину уровня
     total_level_height = len(level)*PLATFORM_HEIGHT   # высоту
 
-    camera = Camera(camera_configure, total_level_width, total_level_height)
+    camera = Camera(total_level_width, total_level_height, WIN_WIDTH, WIN_HEIGHT)
     eventHandler = EventHandler(hero)
 
     quit = False
@@ -124,15 +112,17 @@ def main() -> None:
         if (hero.winner):
             quit = True # прошли уровень - выходим
 
-        camera.update(hero) # центризируем камеру относительно персонажа
+        monsters.update(platforms) # передвигаем всех монстров
+        hero.update(platforms)   # передвижение персонажа
+
+        camera.centerCamera(hero.rect) # центрируем камеру относительно персонажа
         # pygame.display.update()     # обновление и вывод всех изменений на экран
         for e in entities:
-            screen.blit(e.image, camera.apply(e))
+            screen.blit(e.image, camera.transformSprite(e))
             # pygame.display.update()     # обновление и вывод всех изменений на экран
 
         animatedEntities.update() # показываем анимацию
         # pygame.display.update()     # обновление и вывод всех изменений на экран
-        monsters.update(platforms) # передвигаем всех монстров
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
 

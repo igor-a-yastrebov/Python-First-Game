@@ -1,8 +1,8 @@
 from dependency_injector import containers, providers
 
-from player import Player
+from hero import Hero
 from eventhandler import EventHandler
 
 class MainContainer(containers.DeclarativeContainer):
-    player = providers.Singleton(Player)
+    player = providers.Singleton(Hero)
     eventHandler = providers.Singleton(EventHandler)
