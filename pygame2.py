@@ -1,5 +1,6 @@
 from pickle import FALSE
 import pygame
+import os
 from pygame import *
 from eventhandler import EventHandler
 from monsters import *
@@ -16,50 +17,50 @@ PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
 PLATFORM_COLOR = "#FF6262"
 
-def main() -> None:
-    entities = pygame.sprite.Group() # Все объекты
-    monsters = pygame.sprite.Group() # Все передвигающиеся монстры
-    platforms = [] # то, во что мы будем врезаться или опираться
+FILE_DIR = os.path.dirname(__file__) #  Полный путь к каталогу с файлами
 
-    hero = Hero(55,55)
+entities = pygame.sprite.Group() # Все объекты
+monsters = pygame.sprite.Group() # Все передвигающиеся монстры
+platforms = [] # то, во что мы будем врезаться или опираться
+level = [] # текущий уровень для парсинга блоков
+
+def loadLevel(filename):
+    global playerX, playerY # объявляем глобальные переменные, это координаты героя
+
+    levelFile = open('%s/levels/1.txt' % FILE_DIR)
+    line = " "
+    commands = []
+    while line[0] != "/": # пока не нашли символ завершения файла
+        line = levelFile.readline() #считываем построчно
+        if line[0] == "[": # если нашли символ начала уровня
+            while line[0] != "]": # то, пока не нашли символ конца уровня
+                line = levelFile.readline() # считываем построчно уровень
+                if line[0] != "]": # и если нет символа конца уровня
+                    endLine = line.find("|") # то ищем символ конца строки
+                    level.append(line[0: endLine]) # и добавляем в уровень строку от начала до символа "|"
+                    
+        if line[0] != "": # если строка не пустая
+         commands = line.split() # разбиваем ее на отдельные команды
+         if len(commands) > 1: # если количество команд > 1, то ищем эти команды
+            if commands[0] == "player": # если первая команда - player
+                playerX= int(commands[1]) # то записываем координаты героя
+                playerY = int(commands[2])
+            if commands[0] == "portal": # если первая команда portal, то создаем портал
+                tp = BlockTeleport(int(commands[1]),int(commands[2]),int(commands[3]),int(commands[4]))
+                entities.add(tp)
+                platforms.append(tp)
+            if commands[0] == "monster": # если первая команда monster, то создаем монстра
+                mn = Monster(int(commands[1]),int(commands[2]),int(commands[3]),int(commands[4]),int(commands[5]),int(commands[6]))
+                entities.add(mn)
+                platforms.append(mn)
+                monsters.add(mn)
+
+def main() -> None:
+    loadLevel('1.txt')
+    hero = Hero(playerX,playerY)
     entities.add(hero)
 
-    # единственный монстр
-    mn = Monster(190,200,2,3,150,105)
-    entities.add(mn)
-    platforms.append(mn)
-    monsters.add(mn)
-
-    # единственный телепорт
-    tp = BlockTeleport(128,512,800,32)
-    entities.add(tp)
-    platforms.append(tp)
-    level = [
-        "----------------------------------",
-        "-                                -",
-        "-                       --       -",
-        "-        *                       -",
-        "-                                -",
-        "-            --                  -",
-        "--                               -",
-        "-                             P  -",
-        "-                   ----     --- -",
-        "-                                -",
-        "--                               -",
-        "-            *                   -",
-        "-                            --- -",
-        "-                                -",
-        "-                                -",
-        "-  *   ---                  *    -",
-        "-                                -",
-        "-   -------         ----         -",
-        "-                                -",
-        "-                         -      -",
-        "-                            --  -",
-        "-           ***                  -",
-        "-                                -",
-        "----------------------------------"]
-    # парсим уровень, создаем блоки
+    # парсим блоки уровня
     x=y=0 # координаты
     for row in level: # вся строка
         for col in row: # каждый символ

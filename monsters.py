@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from pygame import *
-import pyganim
 import os
 
 from blocks import BlockAnimated, BlockStatic
